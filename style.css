@@ -1,0 +1,51 @@
+/* vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8: */
+/* css reset {{{ */
+
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin: 0; padding: 0; } body, button, input, select, textarea { font: 12px/1.5 tahoma, arial, Helvetica, "微软雅黑", "Hiragino Sans GB", \5b8b\4f53, sans-serif; } h1, h2, h3, h4, h5, h6 { font-size: 100%; } address, cite, dfn, em, var { font-style: normal; } code, kbd, pre, samp { font-family: monaco, 'courier new', 'bitstream vera sans mono', courier, monospace; } small { font-size: 12px; } ul, ol { list-style: none; } a { text-decoration: none; } a:hover { text-decoration: underline; } fieldset, img { border: 0; } img { vertical-align: middle; } button, input, select, textarea { font-size: 100%; } table { border-collapse: collapse; border-spacing: 0; }
+
+/* }}} css reset */
+body {background:#fff; min-width:360px; color:#666; padding:1em 2em 1em 1em; overflow-x:hidden;}
+a {color:#c46;}
+:focus {outline: 0 none;}
+
+input[type=text]:focus, input[type=password]:focus, input.text:focus, select:focus, textarea:focus {
+    -webkit-box-shadow: 0 0 5px #c46;
+} 
+textarea, input[type=text], input[type=password], input.text { padding: 2px; }
+
+
+h1 {text-align:center; font-size:18px; letter-spacing:3pt;
+}
+#gloabl_msg {color:#ccc;  text-align:center; border-bottom:3px #aaa double;
+    text-shadow:0 1px 1px #ccc;
+    -webkit-box-shadow:0 2px 2px #ccc;
+}
+#gloabl_msg.error {color:#c46;}
+#gloabl_msg.ok {color:#6c4;}
+h1:first-letter {color:#ccc; font-size:12px;}
+ul {margin-bottom:1em;}
+li {border-bottom:1px solid #c9c9c9; padding-top:1em;}
+
+.msg-list li:after {content: '\0020'; display: block; height: 0; clear: both;}
+.msg-list li .auth {float:left; text-align:center;margin-right:1em; font-size:10px;}
+.msg-list li img {display:block; text-align:center;}
+.msg-list li .meta {color:#ccc; text-align:right;font-size:10px; margin-top:1em;}
+
+.status-update {background:rgba(0,0,0,.8); position:fixed; top:80px; left:50%; top:9em; width:24em; height:12em; margin-left: -12em; text-align:center;
+    -webkit-box-shadow:0 0 10px rgba(0,0,0,.5);
+    -webkit-border-radius:10px;
+}
+.status-update .fun {color:#eee; padding:5px 0; border-bottom:1px solid #444;}
+.status-update textarea {width:90%;height:6em; margin:5px auto;
+    -webkit-border-radius:5px;
+}
+.status-update .act a {cursor:pointer;}
+.login-setting button span,
+.status-update .act span {font-size:14px; padding:0 1em;}
+
+.hidden {display:none;}
+.newbie {font-size:2em; color:#c93; text-align:center; border-bottom:0 none; margin:0 0 50px;}
+
+.login-setting {margin:2em auto;}
+.login-setting p {margin:.5em;}
+.login-setting input {width:16em;height:2em; line-height:2em; vertical-align:middle;}

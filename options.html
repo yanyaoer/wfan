@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>白饭 - 设置</title>
+<link rel="stylesheet" href="style.css" />
+<script type="text/javascript">
+
+// Saves options to localStorage.
+function save_options() {
+  localStorage["username"] = document.getElementById('username').value;
+  localStorage["password"] = document.getElementById('password').value;
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "已经被 bigBrother 备案记录了!";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+	var username = localStorage["username"];
+	var password = localStorage["password"];
+	console.log(localStorage);
+	if (!username || !password) {
+		return;
+	}
+	document.getElementById('username').value = username;
+	document.getElementById('password').value = password;
+
+}
+
+</script>
+
+<body onload="restore_options()">
+<div class="login-setting">
+	<p><input id="username" type="text" placeholder="报上名来:" /></p>
+	<p><input id="password" type="password" placeholder="IP/IC/IQ卡,统统告诉我密码:" /></p>
+	<p>
+		<button onclick="save_options()"><span>备案记录!</span></button>
+		<span id="status"></span>
+	</p>
+</div>
+</body>
+</html>

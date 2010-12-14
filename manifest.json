@@ -1,0 +1,15 @@
+{
+    "name": "wfan",
+    "version": "0.1",
+    "description": "white fanfou for chrome",
+    "browser_action": {
+        "default_icon": "icon.png",
+        "popup": "popup.html"
+    },
+	"options_page": "options.html",
+    "permissions": [
+        "tabs",
+        "http://api2.fanfou.com/"
+    ]
+}
+
