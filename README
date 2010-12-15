@@ -1,8 +1,18 @@
 === 使用说明 ===
 左右方向键切换 好友更新 和 提到我的
 n 键显示发送新消息表单
+r 刷新当前页
 
 === TODO ===
 登陆验证
-切换timeline的效果
-输入状态时禁用快捷键切换timeline/呼出输入框
+timeline 切换效果
+<del>输入状态时禁用快捷键切换 timeline/呼出输入框</del>
+代码重构 -.-!!!
+
+=== changlog ===
+v0.1.1 
+	加入 username/password 判断,为空时自动跳转到 option.html, 饭否君的验证 api 似乎还不能用, so...
+	增加 r 键刷新当前timeline
+	增加导航栏
+	修改部分吐槽文字,样式
+	输入状态时禁用快捷键

@@ -13,18 +13,36 @@ function save_options() {
 
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
-  status.innerHTML = "已经被 bigBrother 备案记录了!";
+  status.innerHTML = "bigBrother 只备案记录! 不保证通过饭否君的唷";
   setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
+	status.innerHTML = "";
+	window.location.href= 'popup.html';
+  }, 1750);
 }
+
+	var globalMsg = function(msg, style){
+		var def_msg = '白白胖胖爱吃饭', 
+			g_msg = document.getElementById('global_msg');
+		g_msg.innerText = msg;
+		g_msg.setAttribute('class', style);
+		setTimeout(function(){
+			g_msg.innerText = def_msg;
+			g_msg.setAttribute('class', '');
+		}, 3000);
+	}
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
+	window.onkeydown = function(e) {
+		if (e.keyCode == 13) {
+			save_options();
+		}
+	}
 	var username = localStorage["username"];
 	var password = localStorage["password"];
 	console.log(localStorage);
 	if (!username || !password) {
+		globalMsg('讨厌,单子填完整的啦','error');
 		return;
 	}
 	document.getElementById('username').value = username;
@@ -35,6 +53,11 @@ function restore_options() {
 </script>
 
 <body onload="restore_options()">
+<header>
+<h1>白饭</h1>
+<nav id="J_nav"></nav>
+<p id="global_msg">白白胖胖爱吃饭</p>
+</header>
 <div class="login-setting">
 	<p><input id="username" type="text" placeholder="报上名来:" /></p>
 	<p><input id="password" type="password" placeholder="IP/IC/IQ卡,统统告诉我密码:" /></p>

@@ -7,10 +7,9 @@
 </head>
 <body>
 <header>
-<h1>吃白饭</h1>
-<p id="gloabl_msg">白白胖胖爱吃饭</p>
-<nav id="J_nav">
-</nav>
+<h1>白饭</h1>
+<nav id="J_nav"></nav>
+<p id="global_msg">白白胖胖爱吃饭</p>
 </header>
 <script type="text/javascript" charset="utf-8">
 	var config = {
@@ -18,13 +17,14 @@
 		username : localStorage['username'],
 		password : localStorage['password'],
 		API : 'http://api2.fanfou.com/',
-		typeArr : ['friends_timeline', 'replies'/*, 'direct_messages', 'favorites'*/]
+		isType : null,
+		typeArr : ['friends_timeline', 'replies', 'direct_messages', 'favorites']
 	};
 	config.urlArr = [
 		config.API +'statuses/friends_timeline.json?format=html',
-		config.API +'statuses/replies.json?format=html'
-	//	config.API +'statuses/direct_messages.json?format=html'
-	//	config.API +'statuses/favorites.json?format=html'
+		config.API +'statuses/replies.json?format=html',
+		config.API +'statuses/direct_messages.json?format=html',
+		config.API +'statuses/favorites.json?format=html'
 	];
 
 	var sendReq = function(o){
@@ -45,6 +45,8 @@
 			if (req.readyState == 4 && req.status== 200 ) {
 				var obj = eval('(' + req.responseText + ')');
 				fn(obj, o.type);
+			}else {
+				fn({'error':'饭否君不给力了:..('})
 			}
 		}
 		return req;
@@ -54,8 +56,10 @@
 		var typeStr = type?' '+type:'',
 			str='<ul id="actived" class="msg-list'+ typeStr +'">';
 		if (obj.length == 0){
-			str += '<li class="newbie">小样, 新来的吧?</li>';
-		}else {
+			str += '<li class="s-msg newbie">跟朋友聊聊去吧,<br />宅电脑前可找不到妹子</li>';
+		}else if(obj.error){
+			str += '<li class="s-msg error">'+obj.error+'</li>';
+		}else{
 			for(var i=0, leng= obj.length; i<leng; i++) {
 				var o = obj[i];
 				var d = new Date(o.created_at);
@@ -72,7 +76,8 @@
 		document.body.innerHTML += str;
 	}
 
-	var swithTimeline = function(dir){
+	var switchTimeline = function(dir){
+		document.getElementById('J_nav').getElementsByTagName('a')[config.defaultOrder].setAttribute('class','');
 		if (dir) {
 			if (dir == 'right') {
 				if (config.defaultOrder+1 == config.typeArr.length) {
@@ -89,8 +94,9 @@
 			}
 		}
 
-		if (typeof(dir) == 'Number') {
+		if (typeof(dir) == 'number') {
 			var i = dir;
+			config.defaultOrder = dir;
 		}else {
 			var i = config.defaultOrder;
 		}
@@ -99,6 +105,7 @@
 			url : config.urlArr[i],
 			type : config.typeArr[i]
 		});
+		document.getElementById('J_nav').getElementsByTagName('a')[config.defaultOrder].setAttribute('class','active');
 	}
 
 	var createNav = function() {
@@ -108,15 +115,29 @@
 			var a = document.createElement('a');
 			console.log(nav, a);
 			a.href=urlArr[i];
-			a.innerText='&#8226;';
-			a.setAttribute('class', config.typeArr[i]);
+			a.setAttribute('data-type', config.typeArr[i]);
+			a.setAttribute('data-order', i);
+			a.innerHTML='&#8226;';
+		//	a.setAttribute('class', config.typeArr[i]);
 			nav.appendChild(a);
+		}
+		document.onmouseover = function(e){
+			var el = e.target;
+			if (el.parentNode.id == 'J_nav') {
+				el.innerText = el.getAttribute('data-type');
+				el.onmouseout = function(){
+					el.innerHTML = '&#8226;';
+				}
+				el.onclick = function(){
+					switchTimeline(parseInt(this.getAttribute('data-order')));
+				}
+			}
 		}
 	}
 
-	var gloablMsg = function(msg, style){
+	var globalMsg = function(msg, style){
 		var def_msg = '白白胖胖爱吃饭', 
-			g_msg = document.getElementById('gloabl_msg');
+			g_msg = document.getElementById('global_msg');
 		g_msg.innerText = msg;
 		g_msg.setAttribute('class', style);
 		setTimeout(function(){
@@ -128,47 +149,75 @@
 	var sendStatus = function(){
 		var _msg = document.getElementById('J_status').value;
 		if (!_msg) {
-			gloablMsg('吭爹呐, 写几个字再发好咩?', 'error');
+			globalMsg('吭爹呐, 写几个字再发好咩?', 'error');
+			config.isType = null;
 		}else {
 			var req = new sendReq({
 				url : config.API + 'statuses/update.json',
 				type : 'update',
 				msg : 'status='+_msg+'&source="white-fan"',
 				fn : function(){
-					swithTimeline(0);
+					switchTimeline(0);
 					var del = document.getElementById('J_update');
 					del.parentNode.removeChild(del);
-					gloablMsg('厨房已收到饭桶的菜单!', 'ok');
+					globalMsg('厨房已收到饭桶的菜单!', 'ok');
+					config.isType = null;
 				}
 			});
 		}
 	}
-	var createStatusForm = function() {
+	var showStatusForm = function() {
 		var pop = document.createElement('div');
 		pop.setAttribute('class', 'status-update');
 		pop.setAttribute('id', 'J_update');
-		pop.innerHTML = '<p class="fun">"老板, 来碗新鲜白米饭!"</p><textarea id="J_status"></textarea><p class="act"><button onclick="sendStatus()" id="J_send"><span>老板,就算是碗白饭也得记菜单啊!</span></button></p>';
+		pop.innerHTML = '<p class="fun">"老板, 来碗新鲜白米饭!"</p><textarea id="J_status"></textarea><p class="act"><button onclick="sendStatus()" id="J_send"><span>谢谢, 不用别的菜了,白饭就好</span></button></p>';
 		document.body.appendChild(pop);
 
 		document.getElementById('J_send').onclick = sendStatus;
-		console.log(document.getElementById('J_send').onclick);
+		document.getElementById('J_status').focus();
+		document.getElementById('J_status').innerText='';
+		config.isType = true;
 	}
 
-	//get default msg
-	window.onload = function(){
-	//	createNav();
-		swithTimeline();
-	//			createStatusForm();
-		window.onkeydown = function(e,i){
-			if(e.keyCode == 39) {
-				swithTimeline('right');
-			}else if(e.keyCode == 37) {
-				swithTimeline('left');
-			}else if(e.keyCode == 78) { // press n to create new msg form
-				createStatusForm();
+	var verify = function() {
+		console.log(config.username=='');
+		if (config.username=='' ||config.password=='' ) {
+			window.location.href = 'options.html';
+		}else {
+			sendReq({
+				url : config.API+'account/verify_credentials.json',
+				fn : function(o) {
+					console.log(o);
+				}
+			});
+		
+		}
+	}
+//get default msg
+window.onload = function(){
+	verify();
+	createNav();
+	switchTimeline();
+	window.onkeyup = function(e,i){
+		if (config.isType !== null)  return;
+		if(e.keyCode == 39) {
+			switchTimeline('right');
+		}else if(e.keyCode == 37) {
+			switchTimeline('left');
+		}else if(e.keyCode == 78) { // press n to create new msg form
+			showStatusForm();
+		}else if(e.keyCode == 27 || e.keyCode == 82) {
+			e.stopPropagation();
+			if (config.isType == true ) {
+				var pop = document.getElementById('J_update');
+				pop.parentNode.removeChild(pop);
+				config.isType = false;
+			}else {
+				switchTimeline();
 			}
 		}
 	}
+}
 
 </script>
 </body>

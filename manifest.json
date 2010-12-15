@@ -1,6 +1,6 @@
 {
     "name": "wfan",
-    "version": "0.1",
+    "version": "0.1.1",
     "description": "white fanfou for chrome",
     "browser_action": {
         "default_icon": "icon.png",
