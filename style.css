@@ -4,7 +4,7 @@
 body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin: 0; padding: 0; } body, button, input, select, textarea { font: 12px/1.5 tahoma, arial, Helvetica, "微软雅黑", "Hiragino Sans GB", \5b8b\4f53, sans-serif; } h1, h2, h3, h4, h5, h6 { font-size: 100%; } address, cite, dfn, em, var { font-style: normal; } code, kbd, pre, samp { font-family: monaco, 'courier new', 'bitstream vera sans mono', courier, monospace; } small { font-size: 12px; } ul, ol { list-style: none; } a { text-decoration: none; } a:hover { text-decoration: underline; } fieldset, img { border: 0; } img { vertical-align: middle; } button, input, select, textarea { font-size: 100%; } table { border-collapse: collapse; border-spacing: 0; }
 
 /* }}} css reset */
-body {background:#fff; min-width:360px; color:#666; padding:7em 2em 1em 1em; overflow-x:hidden;}
+body {background:#fff; min-width:360px; color:#666; padding:8em 2em 1em 1em; overflow-x:hidden;}
 a {color:#c46;}
 :focus {outline: 0 none;}
 
@@ -36,9 +36,21 @@ li {border-bottom:1px solid #c9c9c9; padding-top:1em;}
 .msg-list li:after {content: '\0020'; display: block; height: 0; clear: both;}
 .msg-list li .auth {float:left; text-align:center;margin-right:1em; font-size:10px;}
 .msg-list li img {display:block; text-align:center;}
+.msg-list li .msg {word-break:break-all;}
 .msg-list li .meta {color:#ccc; text-align:right;font-size:10px; margin-top:1em;}
+.msg-list li .reply-to {margin-right:.5em;}
 
-.status-update {background:rgba(0,0,0,.8); position:fixed; top:80px; left:50%; top:9em; width:24em; margin-left: -12em; text-align:center; padding-bottom:1em;
+.msg-list li .act {display:none;}
+.msg-list li .act a {margin:0 .5em;}
+
+.msg-list li:hover .reply-to,
+.msg-list li:hover .time {display:none;}
+.msg-list li:hover .act {display:inline;}
+
+.pop-mask {width:100%; height:100%; background:rgba(255,255,255, .8); position:fixed; top:0; left:0;}
+.pop-mask .close {position:fixed;top:10em;right:15%;width:12px;height:12px;line-height:10px;text-align:center;font-size:10px;border:2px solid #c46;background:#000;color:#fff;z-index:99;
+    -webkit-border-radius:10px;}
+.status-update {background:rgba(0,0,0,.8); position:fixed; left:50%; top:9em; width:24em; margin-left: -12em; text-align:center; padding-bottom:1em;
     -webkit-box-shadow:0 0 10px rgba(0,0,0,.5);
     -webkit-border-radius:10px;
 }

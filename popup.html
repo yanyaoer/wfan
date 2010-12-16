@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>白饭</title>
 <link rel="stylesheet" href="style.css" />
+<script src='js/util.js'></script>
 </head>
 <body>
 <header>
@@ -18,7 +19,8 @@
 		password : localStorage['password'],
 		API : 'http://api2.fanfou.com/',
 		isType : null,
-		typeArr : ['friends_timeline', 'replies', 'direct_messages', 'favorites']
+		typeArr : ['friends_timeline', 'replies', 'direct_messages', 'favorites'],
+		pageArr : [2,2,2,2]
 	};
 	config.urlArr = [
 		config.API +'statuses/friends_timeline.json?format=html',
@@ -27,177 +29,12 @@
 		config.API +'statuses/favorites.json?format=html'
 	];
 
-	var sendReq = function(o){
-		var auth = "Basic "+btoa(config.username+':'+config.password),
-			fn = o.fn || creatList;
-			req = new XMLHttpRequest();
-			msg = o.msg || null;
-		if (o.msg) {
-			req.open('POST', o.url+'?'+o.msg , true);
-			req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		}else {
-			req.open('POST', o.url , true);
-		}
-		req.setRequestHeader('Authorization', auth);
-		req.send(o.msg);
-
-		req.onreadystatechange = function(){
-			if (req.readyState == 4 && req.status== 200 ) {
-				var obj = eval('(' + req.responseText + ')');
-				fn(obj, o.type);
-			}else {
-				fn({'error':'饭否君不给力了:..('})
-			}
-		}
-		return req;
-	};
-
-	var creatList = function (obj, type){
-		var typeStr = type?' '+type:'',
-			str='<ul id="actived" class="msg-list'+ typeStr +'">';
-		if (obj.length == 0){
-			str += '<li class="s-msg newbie">跟朋友聊聊去吧,<br />宅电脑前可找不到妹子</li>';
-		}else if(obj.error){
-			str += '<li class="s-msg error">'+obj.error+'</li>';
-		}else{
-			for(var i=0, leng= obj.length; i<leng; i++) {
-				var o = obj[i];
-				var d = new Date(o.created_at);
-				var time = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-				str += '<li><a class="auth" href="http://fanfou.com/'+o.user.id+'"><img src="'+o.user.profile_image_url+'" />'+o.user.screen_name+'</a>:'+o.text+'<p class="meta">'+time+' from '+o.source+'</p></li>'
-			}
-		}
-		str+='</ul>'
-		var actived = document.getElementById('actived');
-		if (actived) {
-			actived.setAttribute('id','');
-			actived.setAttribute('class', actived.getAttribute('class')+' hidden');
-		}
-		document.body.innerHTML += str;
-	}
-
-	var switchTimeline = function(dir){
-		document.getElementById('J_nav').getElementsByTagName('a')[config.defaultOrder].setAttribute('class','');
-		if (dir) {
-			if (dir == 'right') {
-				if (config.defaultOrder+1 == config.typeArr.length) {
-					config.defaultOrder = 0;
-				}else {
-					config.defaultOrder++;
-				}
-			}else if(dir == 'left') {
-				if (config.defaultOrder == 0) {
-					config.defaultOrder = config.typeArr.length -1;
-				}else {
-					config.defaultOrder--;
-				}
-			}
-		}
-
-		if (typeof(dir) == 'number') {
-			var i = dir;
-			config.defaultOrder = dir;
-		}else {
-			var i = config.defaultOrder;
-		}
-
-		var req = new sendReq({
-			url : config.urlArr[i],
-			type : config.typeArr[i]
-		});
-		document.getElementById('J_nav').getElementsByTagName('a')[config.defaultOrder].setAttribute('class','active');
-	}
-
-	var createNav = function() {
-		var urlArr = config.urlArr,
-			nav = document.getElementById('J_nav');
-		for(var i=0,leng=urlArr.length; i<leng; i++) {
-			var a = document.createElement('a');
-			console.log(nav, a);
-			a.href=urlArr[i];
-			a.setAttribute('data-type', config.typeArr[i]);
-			a.setAttribute('data-order', i);
-			a.innerHTML='&#8226;';
-		//	a.setAttribute('class', config.typeArr[i]);
-			nav.appendChild(a);
-		}
-		document.onmouseover = function(e){
-			var el = e.target;
-			if (el.parentNode.id == 'J_nav') {
-				el.innerText = el.getAttribute('data-type');
-				el.onmouseout = function(){
-					el.innerHTML = '&#8226;';
-				}
-				el.onclick = function(){
-					switchTimeline(parseInt(this.getAttribute('data-order')));
-				}
-			}
-		}
-	}
-
-	var globalMsg = function(msg, style){
-		var def_msg = '白白胖胖爱吃饭', 
-			g_msg = document.getElementById('global_msg');
-		g_msg.innerText = msg;
-		g_msg.setAttribute('class', style);
-		setTimeout(function(){
-			g_msg.innerText = def_msg;
-			g_msg.setAttribute('class', '');
-		}, 3000);
-	}
-
-	var sendStatus = function(){
-		var _msg = document.getElementById('J_status').value;
-		if (!_msg) {
-			globalMsg('吭爹呐, 写几个字再发好咩?', 'error');
-			config.isType = null;
-		}else {
-			var req = new sendReq({
-				url : config.API + 'statuses/update.json',
-				type : 'update',
-				msg : 'status='+_msg+'&source="white-fan"',
-				fn : function(){
-					switchTimeline(0);
-					var del = document.getElementById('J_update');
-					del.parentNode.removeChild(del);
-					globalMsg('厨房已收到饭桶的菜单!', 'ok');
-					config.isType = null;
-				}
-			});
-		}
-	}
-	var showStatusForm = function() {
-		var pop = document.createElement('div');
-		pop.setAttribute('class', 'status-update');
-		pop.setAttribute('id', 'J_update');
-		pop.innerHTML = '<p class="fun">"老板, 来碗新鲜白米饭!"</p><textarea id="J_status"></textarea><p class="act"><button onclick="sendStatus()" id="J_send"><span>谢谢, 不用别的菜了,白饭就好</span></button></p>';
-		document.body.appendChild(pop);
-
-		document.getElementById('J_send').onclick = sendStatus;
-		document.getElementById('J_status').focus();
-		document.getElementById('J_status').innerText='';
-		config.isType = true;
-	}
-
-	var verify = function() {
-		console.log(config.username=='');
-		if (config.username=='' ||config.password=='' ) {
-			window.location.href = 'options.html';
-		}else {
-			sendReq({
-				url : config.API+'account/verify_credentials.json',
-				fn : function(o) {
-					console.log(o);
-				}
-			});
-		
-		}
-	}
 //get default msg
 window.onload = function(){
 	verify();
 	createNav();
 	switchTimeline();
+//			showStatusForm();
 	window.onkeyup = function(e,i){
 		if (config.isType !== null)  return;
 		if(e.keyCode == 39) {
@@ -215,6 +52,30 @@ window.onload = function(){
 			}else {
 				switchTimeline();
 			}
+		}else if(e.keyCode == 32) {
+			config.timeline = 'join';
+//			config.prototype.t.page = 2;
+
+			sendReq({url : config.urlArr[config.defaultOrder]+'&page='+config.pageArr[config.defaultOrder]});	
+		}
+			config.pageArr[config.defaultOrder]++;
+			console.log(config.pageArr);
+	}
+	document.onclick = function(e){
+		e.stopPropagation();
+		var el = e.target;
+		if (el.getAttribute('class') == 'reply') {
+			var li = el.parentNode.parentNode.parentNode;
+				reply_id = li.getAttribute('data-id'),
+				auth = li.getAttribute('data-user');
+				msg = '@'+auth+' ';
+			//	msg = '@'+auth+' '+li.getElementsByClassName('msg')[0].innerHTML;
+			showStatusForm(reply_id, msg);
+		}else if(el.getAttribute('class')== 'former') {
+			var uid = el.href.replace(/http:\/\/fanfou.com\//g,'');
+			console.log(uid);
+			var _url = config.API+'statuses/user_timeline.json?id='+uid;
+			sendReq({url:_url});
 		}
 	}
 }
