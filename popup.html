@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>白饭</title>
+<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="style.css" />
 <script src='js/util.js'></script>
 </head>
@@ -19,7 +20,7 @@
 		password : localStorage['password'],
 		API : 'http://api2.fanfou.com/',
 		isType : null,
-		typeArr : ['friends_timeline', 'replies', 'direct_messages', 'favorites'],
+		typeArr : ['home', 'replies', 'messages', 'favorites'],
 		pageArr : [2,2,2,2]
 	};
 	config.urlArr = [
@@ -79,6 +80,8 @@ window.onload = function(){
 		}
 	}
 }
+
+
 
 </script>
 </body>

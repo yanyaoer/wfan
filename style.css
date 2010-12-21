@@ -1,7 +1,13 @@
 /* vim: set et sw=4 ts=4 sts=4 fdm=marker ff=unix fenc=utf8: */
+
+@font-face {
+  font-family: 'wqy-microhei';
+  src: url('./wqy-microhei.ttc');
+}
+
 /* css reset {{{ */
 
-body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin: 0; padding: 0; } body, button, input, select, textarea { font: 12px/1.5 tahoma, arial, Helvetica, "微软雅黑", "Hiragino Sans GB", \5b8b\4f53, sans-serif; } h1, h2, h3, h4, h5, h6 { font-size: 100%; } address, cite, dfn, em, var { font-style: normal; } code, kbd, pre, samp { font-family: monaco, 'courier new', 'bitstream vera sans mono', courier, monospace; } small { font-size: 12px; } ul, ol { list-style: none; } a { text-decoration: none; } a:hover { text-decoration: underline; } fieldset, img { border: 0; } img { vertical-align: middle; } button, input, select, textarea { font-size: 100%; } table { border-collapse: collapse; border-spacing: 0; }
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin: 0; padding: 0; } body, button, input, select, textarea { font: 12px/1.5 tahoma, arial, Helvetica, "wqy", "微软雅黑", "Hiragino Sans GB", \5b8b\4f53, sans-serif; } h1, h2, h3, h4, h5, h6 { font-size: 100%; } address, cite, dfn, em, var { font-style: normal; } code, kbd, pre, samp { font-family: monaco, 'courier new', 'bitstream vera sans mono', courier, monospace; } small { font-size: 12px; } ul, ol { list-style: none; } a { text-decoration: none; } a:hover { text-decoration: underline; } fieldset, img { border: 0; } img { vertical-align: middle; } button, input, select, textarea { font-size: 100%; } table { border-collapse: collapse; border-spacing: 0; }
 
 /* }}} css reset */
 body {background:#fff; min-width:360px; color:#666; padding:8em 2em 1em 1em; overflow-x:hidden;}
@@ -13,7 +19,7 @@ input[type=text]:focus, input[type=password]:focus, input.text:focus, select:foc
 } 
 textarea, input[type=text], input[type=password], input.text { padding: 2px; }
 
-header {position:fixed; top:0;left:0;width:100%; background:rgba(255,255,255,.8);
+header {position:fixed; top:0;left:0;width:100%; background:rgba(255,255,255,.8); z-index:100;
     -webkit-box-shadow:0 2px 5px #ccc;
 }
 h1 {text-align:center; font-size:2em; line-height:2em; letter-spacing:3pt; vertical-align:middle;}
@@ -31,12 +37,29 @@ h1:after {content:''; color:#ccc; font-size:16px; letter-spacing:0;}
 #global_msg.error {color:#c46;}
 #global_msg.ok {color:#6c4;}
 ul {margin-bottom:1em;}
-li {border-bottom:1px solid #c9c9c9; padding-top:1em;}
+li {border-bottom:1px solid #c9c9c9; padding-top:1em; /*font: "wqy-microhei";*/}
 
 .msg-list li:after {content: '\0020'; display: block; height: 0; clear: both;}
-.msg-list li .auth {float:left; text-align:center;margin-right:1em; font-size:10px;}
-.msg-list li img {display:block; text-align:center;}
-.msg-list li .msg {word-break:break-all;}
+.msg-list li .auth {float:left; text-align:center;margin-right:1em; font-size:10px; position:relative;
+}
+.msg-list li img {display:block; margin-bottom:.2em;
+    overflow:hidden;
+    -webkit-border-radius:10px;
+    -webkit-box-shadow:0 0 7px rgba(0,0,0, .8), 0 0 2px #000;
+}
+.msg-list li .auth .former {display:block; color:#fff; text-shadow:1px 0 #000, 0 0 3px #333; padding:3px 0 17px; margin:-60px 1px 20px;position:relative;
+    -webkit-border-radius:12px;
+    -webkit-border-top-left-radius:10px;
+    -webkit-border-top-right-radius:10px;
+    background: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.35, rgba(255,255,255, .4)),
+        color-stop(0.2, rgba(255,255,255, .15))
+    );
+}
+.msg-list li .msg {word-break:break-all; min-height:3em; text-shadow:1px 1px #ddd;}
 .msg-list li .meta {color:#ccc; text-align:right;font-size:10px; margin-top:1em;}
 .msg-list li .reply-to {margin-right:.5em;}
 
@@ -70,3 +93,5 @@ li {border-bottom:1px solid #c9c9c9; padding-top:1em;}
 .login-setting {margin:2em auto;}
 .login-setting p {margin:.5em;}
 .login-setting input {width:16em;height:2em; line-height:2em; vertical-align:middle;}
+
+

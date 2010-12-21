@@ -5,13 +5,14 @@ r 刷新当前页
 空格 获取下一页
 
 === TODO ===
+@IMPORTANT canvs + wenquanyi microhei 字体渲染
 登陆验证
 timeline 切换效果
-<del>关闭输入框</del>
 获取 timeline 更新提醒/通知
 查看某人的 timeline
 回复/收藏/转发 某条消息
 滚动条到下方自动获取更多 timeline
+<del>关闭输入框</del>
 <del>输入状态时禁用快捷键切换 timeline/呼出输入框</del>
 代码重构 -.-!!!
 
