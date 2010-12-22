@@ -20,6 +20,8 @@
 		password : localStorage['password'],
 		API : 'http://api2.fanfou.com/',
 		isType : null,
+		sid : null,
+		timer : 2, //定时获取新消息,单位分钟唷
 		typeArr : ['home', 'replies', 'messages', 'favorites'],
 		pageArr : [2,2,2,2]
 	};
@@ -32,36 +34,13 @@
 
 //get default msg
 window.onload = function(){
-	verify();
-	createNav();
-	switchTimeline();
-//			showStatusForm();
-	window.onkeyup = function(e,i){
-		if (config.isType !== null)  return;
-		if(e.keyCode == 39) {
-			switchTimeline('right');
-		}else if(e.keyCode == 37) {
-			switchTimeline('left');
-		}else if(e.keyCode == 78) { // press n to create new msg form
-			showStatusForm();
-		}else if(e.keyCode == 27 || e.keyCode == 82) {
-			e.stopPropagation();
-			if (config.isType == true ) {
-				var pop = document.getElementById('J_update');
-				pop.parentNode.removeChild(pop);
-				config.isType = false;
-			}else {
-				switchTimeline();
-			}
-		}else if(e.keyCode == 32) {
-			config.timeline = 'join';
-//			config.prototype.t.page = 2;
+	verify(); //验证登陆
+	createNav(); //创建导航栏
+	switchTimeline(); //获取默认消息列表
+//	showStatusForm();
+	keybind(); //绑顶快捷键
+	getNewTimeline();
 
-			sendReq({url : config.urlArr[config.defaultOrder]+'&page='+config.pageArr[config.defaultOrder]});	
-		}
-			config.pageArr[config.defaultOrder]++;
-			console.log(config.pageArr);
-	}
 	document.onclick = function(e){
 		e.stopPropagation();
 		var el = e.target;
