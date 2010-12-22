@@ -257,7 +257,7 @@
                 }
             });
         }
-        var loop = setInterval(fn, timer*500);
-      //  var loop = setInterval(fn, timer*1000*60);
+  //      var loop = setInterval(fn, timer*500);
+        var loop = setInterval(fn, timer*1000*60);
 
     }
